@@ -1,0 +1,82 @@
+<html>
+<head>
+  <script src="three.min.js"></script>
+  <script src="TrackballControls.js"></script>
+</head>
+<body>
+<script>
+var camera, scene, renderer, control;
+var geometry, material, mesh;
+
+var mesh = null;
+function initMesh() {
+    var loader = new THREE.JSONLoader();
+    loader.load('./wilhelm.json', function(geometry) {
+        material = new THREE.MeshStandardMaterial({ vertexColors: THREE.FaceColors });
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        var ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+        scene.add(ambientLight);
+
+        var pointLight = new THREE.PointLight(0x888888, 0.4);
+        pointLight.position.x = 100;
+        pointLight.position.y = 100;
+        pointLight.position.z = 100;
+        scene.add(pointLight);
+
+        animate();
+        render();
+    });
+}
+
+init();
+initMesh();
+
+function init() {
+	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 100 );
+	camera.position.z = 13;
+
+	scene = new THREE.Scene();
+
+  controls = new THREE.TrackballControls( camera );
+
+  controls.rotateSpeed = 1.0;
+  controls.zoomSpeed = 1.2;
+  controls.panSpeed = 1.5;
+
+  controls.noZoom = false;
+  controls.noPan = true;
+
+  controls.staticMoving = true;
+  controls.dynamicDampingFactor = 0.3;
+
+  controls.keys = [ 65, 83, 68 ];
+
+  controls.addEventListener( 'change', render );
+
+
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+}
+
+function animate() {
+  requestAnimationFrame( animate );
+  controls.update();
+}
+
+function render() {
+	renderer.render( scene, camera );
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  controls.handleResize();
+  render();
+}
+</script>
+</body>
+</html>
