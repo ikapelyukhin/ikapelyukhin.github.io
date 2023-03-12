@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <body>
+    <div>
+        <canvas id="canvas" tabindex="0"></canvas>
+    </div>
+    <div>
+        <input type="text" value="PASS SOME DATA AROUND" id="str"/>
+        <input type="submit" id="submit">
+    </div>
+  </body>
+  <script>
+    var Module = {
+      onRuntimeInitialized: function() {
+	document.querySelector("#submit").onclick = function() {
+	    let str = document.querySelector("#str").value;
+            Module.set_text(str)
+        }
+      },
+      canvas: document.getElementById("canvas"),
+      preRun: function () { ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = "#canvas"; },
+    };
+  </script>
+  <script src="main.js"></script>
+</html>
+
